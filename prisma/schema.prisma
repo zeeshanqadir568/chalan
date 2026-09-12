@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  name      String?
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  clients   Client[]
+  documents Document[]
+}
+
+model Client {
+  id        String     @id @default(cuid())
+  name      String
+  email     String?
+  phone     String?
+  address   String?
+  createdAt DateTime   @default(now())
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents Document[]
+}
+
+enum DocumentType {
+  INVOICE
+  PROPOSAL
+}
+
+enum DocumentStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  ACCEPTED
+  DECLINED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  JAZZCASH
+  EASYPAISA
+  CASH
+  OTHER
+}
+
+model Document {
+  id            String         @id @default(cuid())
+  type          DocumentType
+  number        String
+  status        DocumentStatus @default(DRAFT)
+  currency      String         @default("PKR")
+  issueDate     DateTime       @default(now())
+  dueDate       DateTime?
+  notes         String?
+  taxRate       Float          @default(0)
+  paymentMethod PaymentMethod?
+  paymentRef    String?
+  paidAt        DateTime?
+  shareToken    String         @unique @default(cuid())
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clientId      String
+  client        Client         @relation(fields: [clientId], references: [id])
+  items         DocumentItem[]
+
+  @@unique([userId, type, number])
+}
+
+model DocumentItem {
+  id          String   @id @default(cuid())
+  description String
+  quantity    Float    @default(1)
+  unitPrice   Float
+  sortOrder   Int      @default(0)
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+}

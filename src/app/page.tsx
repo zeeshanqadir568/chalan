@@ -1,69 +1,98 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui";
+
+const features = [
+  {
+    icon: "📄",
+    tone: "bg-indigo-100 text-indigo-700",
+    title: "Invoices that get paid",
+    body: "Create branded invoices in seconds, share a link with your client, and track exactly when they're due.",
+  },
+  {
+    icon: "💸",
+    tone: "bg-emerald-100 text-emerald-700",
+    title: "Built for local payments",
+    body: "Log payments by bank transfer, JazzCash, EasyPaisa, or cash — with a reference number for your records.",
+  },
+  {
+    icon: "🤝",
+    tone: "bg-amber-100 text-amber-700",
+    title: "Proposals, not just invoices",
+    body: "Send a proposal first, get it accepted, then convert it into an invoice without retyping anything.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <div className="flex flex-1 flex-col bg-white text-zinc-900">
+      <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-6">
+        <span className="flex items-center gap-2 text-lg font-semibold">
+          <span className="flex h-7 w-7 items-center justify-center rounded-md bg-indigo-600 text-sm font-bold text-white">
+            C
+          </span>
+          Chalan
+        </span>
+        <nav className="flex items-center gap-3">
+          <Link href="/login" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
+            Log in
+          </Link>
+          <Link href="/register">
+            <Button>Get started free</Button>
+          </Link>
+        </nav>
+      </header>
+
+      <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-6">
+        <section className="relative flex flex-col items-start gap-6 overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-50 via-white to-emerald-50 px-8 py-20 sm:px-12">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-indigo-200/40 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-24 -left-16 h-72 w-72 rounded-full bg-emerald-200/40 blur-3xl"
+          />
+          <span className="relative rounded-full bg-indigo-600/10 px-3 py-1 text-xs font-medium text-indigo-700">
+            Made for freelancers &amp; agencies
+          </span>
+          <h1 className="relative max-w-2xl text-4xl font-semibold tracking-tight sm:text-5xl">
+            Invoices and proposals your clients actually{" "}
+            <span className="bg-gradient-to-r from-indigo-600 to-emerald-600 bg-clip-text text-transparent">
+              pay on time.
+            </span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="relative max-w-xl text-lg text-zinc-600">
+            Chalan is simple invoicing built for how freelancers in Pakistan actually get paid —
+            bank transfer, JazzCash, EasyPaisa, or cash — with clean tracking for every rupee.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          <div className="relative flex gap-3">
+            <Link href="/register">
+              <Button className="px-6 py-3 text-base">Start for free</Button>
+            </Link>
+            <Link href="/login">
+              <Button variant="secondary" className="px-6 py-3 text-base">
+                Log in
+              </Button>
+            </Link>
+          </div>
+        </section>
+
+        <section className="grid gap-6 py-16 sm:grid-cols-3">
+          {features.map((f) => (
+            <div key={f.title} className="flex flex-col gap-3 rounded-xl border border-zinc-200 p-5">
+              <span className={`flex h-10 w-10 items-center justify-center rounded-full text-lg ${f.tone}`}>
+                {f.icon}
+              </span>
+              <h3 className="font-semibold">{f.title}</h3>
+              <p className="text-sm text-zinc-600">{f.body}</p>
+            </div>
+          ))}
+        </section>
       </main>
+
+      <footer className="border-t border-zinc-200 py-8 text-center text-sm text-zinc-500">
+        Chalan — invoicing &amp; proposals for freelancers and agencies.
+      </footer>
     </div>
   );
 }
