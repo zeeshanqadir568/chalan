@@ -3,6 +3,16 @@
 Invoicing and proposals for freelancers and agencies, built around how people
 actually get paid in Pakistan — bank transfer, JazzCash, EasyPaisa, or cash.
 
+## Screenshots
+
+| Landing | Dashboard | Invoice |
+| --- | --- | --- |
+| ![Landing page](screenshots/01-landing.png) | ![Dashboard](screenshots/03-dashboard.png) | ![Invoice detail](screenshots/05-invoice-detail.png) |
+
+| Login | Clients | Proposal |
+| --- | --- | --- |
+| ![Login page](screenshots/02-login.png) | ![Clients list](screenshots/06-clients.png) | ![Proposal detail](screenshots/08-proposal-detail.png) |
+
 ## Stack
 
 - Next.js 16 (App Router, Turbopack) + TypeScript + Tailwind CSS v4
