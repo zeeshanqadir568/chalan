@@ -2,12 +2,8 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/format";
+import { documentTotals } from "@/lib/totals";
 import { Card, Button } from "@/components/ui";
-
-function total(items: { quantity: number; unitPrice: number }[], taxRate: number) {
-  const subtotal = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-  return subtotal + subtotal * (taxRate / 100);
-}
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -21,8 +17,8 @@ export default async function DashboardPage() {
   const outstanding = invoices.filter((d) => d.status === "SENT" || d.status === "OVERDUE");
   const paid = invoices.filter((d) => d.status === "PAID");
 
-  const outstandingTotal = outstanding.reduce((sum, d) => sum + total(d.items, d.taxRate), 0);
-  const paidTotal = paid.reduce((sum, d) => sum + total(d.items, d.taxRate), 0);
+  const outstandingTotal = outstanding.reduce((sum, d) => sum + documentTotals(d.items, d.taxRate).total, 0);
+  const paidTotal = paid.reduce((sum, d) => sum + documentTotals(d.items, d.taxRate).total, 0);
   const overdueCount = invoices.filter((d) => d.status === "OVERDUE").length;
 
   const currency = invoices[0]?.currency ?? "PKR";

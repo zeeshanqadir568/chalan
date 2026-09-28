@@ -1,4 +1,5 @@
 import { formatDate, formatMoney } from "@/lib/format";
+import { documentTotals } from "@/lib/totals";
 import { StatusBadge } from "@/components/status-badge";
 import type { DocumentStatus, DocumentType } from "@prisma/client";
 
@@ -29,9 +30,7 @@ export function DocumentView({
   client: { name: string; email: string | null; phone: string | null; address: string | null };
   issuer: { name: string | null; email: string };
 }) {
-  const subtotal = items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
-  const tax = subtotal * (taxRate / 100);
-  const total = subtotal + tax;
+  const { subtotal, tax, total } = documentTotals(items, taxRate);
 
   return (
     <div className="flex flex-col gap-8">

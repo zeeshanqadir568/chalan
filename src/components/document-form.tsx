@@ -3,6 +3,7 @@
 import { useActionState, useMemo, useState } from "react";
 import { createDocumentAction } from "@/lib/actions/documents";
 import { formatMoney } from "@/lib/format";
+import { documentTotals } from "@/lib/totals";
 import { Button, FieldError, Input, Label, Select, Textarea } from "@/components/ui";
 
 type Item = { description: string; quantity: string; unitPrice: string };
@@ -24,14 +25,17 @@ export function DocumentForm({
   const [currency, setCurrency] = useState("PKR");
   const [taxRate, setTaxRate] = useState("0");
 
-  const totals = useMemo(() => {
-    const subtotal = items.reduce(
-      (sum, item) => sum + (Number(item.quantity) || 0) * (Number(item.unitPrice) || 0),
-      0
-    );
-    const tax = subtotal * ((Number(taxRate) || 0) / 100);
-    return { subtotal, tax, total: subtotal + tax };
-  }, [items, taxRate]);
+  const totals = useMemo(
+    () =>
+      documentTotals(
+        items.map((item) => ({
+          quantity: Number(item.quantity) || 0,
+          unitPrice: Number(item.unitPrice) || 0,
+        })),
+        Number(taxRate) || 0
+      ),
+    [items, taxRate]
+  );
 
   function updateItem(index: number, field: keyof Item, value: string) {
     setItems((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));

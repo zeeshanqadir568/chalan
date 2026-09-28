@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui";
 import { StatusBadge } from "@/components/status-badge";
 import { formatDate, formatMoney } from "@/lib/format";
+import { documentTotals } from "@/lib/totals";
 import type { DocumentStatus } from "@prisma/client";
 
 type Row = {
@@ -48,8 +49,7 @@ export function DocumentList({
         </thead>
         <tbody>
           {documents.map((doc) => {
-            const subtotal = doc.items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
-            const total = subtotal + subtotal * (doc.taxRate / 100);
+            const { total } = documentTotals(doc.items, doc.taxRate);
             return (
               <tr key={doc.id} className="border-b border-zinc-100 last:border-0 hover:bg-zinc-50">
                 <td className="px-4 py-3">
