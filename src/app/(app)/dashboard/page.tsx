@@ -2,8 +2,27 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import { formatMoney } from "@/lib/format";
-import { documentTotals } from "@/lib/totals";
+import { totalsByCurrency } from "@/lib/totals";
 import { Card, Button } from "@/components/ui";
+
+/** One line per currency, so PKR and USD are never added together. */
+function MoneyLines({ totals }: { totals: { currency: string; total: number }[] }) {
+  if (totals.length === 0) {
+    return <p className="mt-3 text-2xl font-semibold text-zinc-900">{formatMoney(0, "PKR")}</p>;
+  }
+  return (
+    <div className="mt-3 flex flex-col gap-0.5">
+      {totals.map(({ currency, total }, i) => (
+        <p
+          key={currency}
+          className={i === 0 ? "text-2xl font-semibold text-zinc-900" : "text-base font-semibold text-zinc-700"}
+        >
+          {formatMoney(total, currency)}
+        </p>
+      ))}
+    </div>
+  );
+}
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -17,11 +36,9 @@ export default async function DashboardPage() {
   const outstanding = invoices.filter((d) => d.status === "SENT" || d.status === "OVERDUE");
   const paid = invoices.filter((d) => d.status === "PAID");
 
-  const outstandingTotal = outstanding.reduce((sum, d) => sum + documentTotals(d.items, d.taxRate).total, 0);
-  const paidTotal = paid.reduce((sum, d) => sum + documentTotals(d.items, d.taxRate).total, 0);
+  const outstandingTotals = totalsByCurrency(outstanding);
+  const paidTotals = totalsByCurrency(paid);
   const overdueCount = invoices.filter((d) => d.status === "OVERDUE").length;
-
-  const currency = invoices[0]?.currency ?? "PKR";
 
   return (
     <div className="flex flex-col gap-8">
@@ -45,7 +62,7 @@ export default async function DashboardPage() {
             </span>
             <p className="text-sm text-zinc-500">Outstanding</p>
           </div>
-          <p className="mt-3 text-2xl font-semibold text-zinc-900">{formatMoney(outstandingTotal, currency)}</p>
+          <MoneyLines totals={outstandingTotals} />
           <p className="mt-1 text-xs text-zinc-500">{outstanding.length} invoice(s)</p>
         </Card>
         <Card accent="emerald">
@@ -55,7 +72,7 @@ export default async function DashboardPage() {
             </span>
             <p className="text-sm text-zinc-500">Paid</p>
           </div>
-          <p className="mt-3 text-2xl font-semibold text-zinc-900">{formatMoney(paidTotal, currency)}</p>
+          <MoneyLines totals={paidTotals} />
           <p className="mt-1 text-xs text-zinc-500">{paid.length} invoice(s)</p>
         </Card>
         <Card accent="red">

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { documentTotals } from "@/lib/totals";
+import { documentTotals, totalsByCurrency } from "@/lib/totals";
 
 describe("documentTotals", () => {
   it("sums line items and applies tax", () => {
@@ -40,5 +40,23 @@ describe("documentTotals", () => {
 
   it("supports fractional quantities (e.g. hours)", () => {
     expect(documentTotals([{ quantity: 2.5, unitPrice: 4000 }], 0).total).toBe(10000);
+  });
+});
+
+describe("totalsByCurrency", () => {
+  it("never adds different currencies together", () => {
+    const docs = [
+      { currency: "PKR", taxRate: 0, items: [{ quantity: 1, unitPrice: 50000 }] },
+      { currency: "USD", taxRate: 0, items: [{ quantity: 1, unitPrice: 500 }] },
+      { currency: "PKR", taxRate: 10, items: [{ quantity: 2, unitPrice: 1000 }] },
+    ];
+    expect(totalsByCurrency(docs)).toEqual([
+      { currency: "PKR", total: 52200 },
+      { currency: "USD", total: 500 },
+    ]);
+  });
+
+  it("returns an empty list when there are no documents", () => {
+    expect(totalsByCurrency([])).toEqual([]);
   });
 });
